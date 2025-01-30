@@ -1,0 +1,48 @@
+<div class="login-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        <!-- Меняем заголовок в зависимости от выбранной формы -->
+        {{ isLogin ? 'Авторизация' : 'Регистрация' }}
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <!-- Форма авторизации -->
+      <form *ngIf="isLogin" (ngSubmit)="login()" #loginForm="ngForm" [formGroup]="formLogin">
+        <mat-form-field appearance="fill">
+          <mat-label>Email</mat-label>
+          <input matInput placeholder="Введите ваш логин" formControlName="login" required>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Пароль</mat-label>
+          <input matInput placeholder="Введите ваш пароль" formControlName="password" type="password" required>
+        </mat-form-field>
+        <button mat-raised-button color="primary" type="submit" [disabled]="!loginForm.valid">Войти</button>
+      </form>
+
+      <!-- Форма регистрации -->
+      <form *ngIf="!isLogin" (ngSubmit)="registration()" #registerForm="ngForm" [formGroup]="formRegistration">
+        <mat-form-field appearance="fill">
+          <mat-label>Email</mat-label>
+          <input matInput placeholder="Введите ваш email" formControlName="login" required>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Пароль</mat-label>
+          <input matInput placeholder="Введите ваш пароль" formControlName="password1" type="password" required>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Подтвердите пароль</mat-label>
+          <input matInput placeholder="Подтвердите ваш пароль" formControlName="password2" type="password" required>
+        </mat-form-field>
+        <button mat-raised-button color="primary" type="submit" [disabled]="!registerForm.valid">Зарегистрироваться</button>
+      </form>
+    </mat-card-content>
+    <mat-card-actions>
+      <!-- Кнопка переключения между формами -->
+      <button mat-button color="accent" (click)="toggleForm()">
+        {{ isLogin ? 'Нет аккаунта? Регистрация' : 'Уже есть аккаунт? Войти' }}
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>
+
