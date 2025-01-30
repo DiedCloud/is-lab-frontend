@@ -22,20 +22,43 @@ export const routes: Routes = [
     ],
   },
   {
+    path: 'tickets',
+    component: TicketsComponent,
+    canActivate: [AuthenticationGuard],
+    children: [
+      {
+        path: '**',
+        redirectTo: ''
+      }
+    ]
+  },
+  {
+    path: 'events',
+    component: EventsComponent,
+    canActivate: [AuthenticationGuard],
+    children: [
+      {
+        path: '**',
+        redirectTo: ''
+      }
+    ]
+  },
+  {
+    path: 'venues',
+    component: VenuesComponent,
+    canActivate: [AuthenticationGuard],
+    children: [
+      {
+        path: '**',
+        redirectTo: ''
+      }
+    ]
+  },
+  {
     path: '',
     component: MainComponent,
     canActivate: [AuthenticationGuard],
     children: [
-      {
-        path: 'tickets',
-        component: TicketsComponent,
-        children: [
-          {
-            path: '**',
-            redirectTo: ''
-          }
-        ]
-      },
       // {
       //   path: 'ticket',
       //   children: [
@@ -49,16 +72,6 @@ export const routes: Routes = [
       //     }
       //   ]
       // },
-      {
-        path: 'events',
-        component: EventsComponent,
-        children: [
-          {
-            path: '**',
-            redirectTo: ''
-          }
-        ]
-      },
       // {
       //   path: 'event',
       //   children: [
@@ -72,16 +85,6 @@ export const routes: Routes = [
       //     }
       //   ]
       // },
-      {
-        path: 'venues',
-        component: VenuesComponent,
-        children: [
-          {
-            path: '**',
-            redirectTo: ''
-          }
-        ]
-      },
       // {
       //   path: 'venue',
       //   children: [
@@ -95,19 +98,6 @@ export const routes: Routes = [
       //     }
       //   ]
       // },
-      {
-        path: 'create',
-        children: [
-          {
-            path: '',
-            component: CreateObjectComponent,
-          },
-          {
-            path: '**',
-            redirectTo: ''
-          }
-        ]
-      },
       {
         path: '**',
         redirectTo: ''

@@ -1,0 +1,12 @@
+<button mat-raised-button color="primary" (click)="openCreateDialog()">
+  Create New Ticket
+</button>
+
+<app-objects-table
+  [columns]="columns"
+  [dataSource]="(this.ticketService.model | async) || []"
+  [canEdit]="canEdit"
+  (rowSave)="saveObject($event)"
+  (rowDelete)="deleteObject($event)"
+></app-objects-table>
+

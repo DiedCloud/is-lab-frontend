@@ -1,0 +1,12 @@
+<button mat-raised-button color="primary" (click)="openCreateDialog()">
+  Create New Venue
+</button>
+
+<app-objects-table
+  [columns]="columns"
+  [dataSource]="(this.venueService.model | async) || []"
+  [canEdit]="canEdit"
+  (rowSave)="saveObject($event)"
+  (rowDelete)="deleteObject($event)"
+></app-objects-table>
+

@@ -38,7 +38,8 @@ export class AppComponent implements OnInit {
     if (!this.userService.user && typeof window !== 'undefined') {
       let login = localStorage.getItem('login');
       if (login) {
-        this.userService.user = {login: login, password: '', type: UserType.MEMBER};
+        this.userService.user = {login: login, type: UserType.MEMBER}; // TODO whoAmI.
+        this.webSocketService.connectWs();
       }
     }
   }

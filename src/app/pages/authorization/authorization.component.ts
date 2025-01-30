@@ -8,6 +8,7 @@ import {MatCardActions, MatCardContent, MatCardHeader, MatCardModule} from "@ang
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {MatButton} from "@angular/material/button";
+import {WebSocketService} from '../../services/web-socket.service';
 
 @Component({
   selector: 'app-authorization',
@@ -27,19 +28,23 @@ import {MatButton} from "@angular/material/button";
   styleUrl: './authorization.component.scss'
 })
 export class AuthorizationComponent {
-  constructor(private router: Router, public userService: UserService) {
+  constructor(
+    private router: Router,
+    public userService: UserService,
+    public webSocketService: WebSocketService
+  ) {
   }
 
   private sendAuth(url: string) {
     this.userService.proceedAuthRequest(url)
       .subscribe(
         (res: any) => {
-          console.log(res);
-
           localStorage.setItem('authToken', res);
 
           if (this.userService.user)
             localStorage.setItem('login', this.userService.user.login);
+
+          this.webSocketService.connectWs();
 
           this.router.navigate(['']).then(r => {
             if (!r) {

@@ -55,7 +55,6 @@ export class ObjectsTableComponent<T> implements AfterViewInit, OnChanges {
 
   // Источник данных
   @Input() set dataSource(data: T[]) {
-    console.log('Data received:', data); // Проверяем данные
     this.data = new MatTableDataSource<T>(data);
     this.initializeFilters();
   }

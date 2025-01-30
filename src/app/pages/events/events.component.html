@@ -1,0 +1,12 @@
+<button mat-raised-button color="primary" (click)="openCreateDialog()">
+  Create New Event
+</button>
+
+<app-objects-table
+  [columns]="columns"
+  [dataSource]="(this.eventService.model | async) || []"
+  [canEdit]="canEdit"
+  (rowSave)="saveObject($event)"
+  (rowDelete)="deleteObject($event)"
+></app-objects-table>
+

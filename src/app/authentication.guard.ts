@@ -19,7 +19,6 @@ export class AuthenticationGuard implements CanActivate {
     }
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('authToken');
-      console.log(token)
       if (!token) {
         return this.router.parseUrl('/authorization');
       }
