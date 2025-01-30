@@ -1,0 +1,31 @@
+<div class="create-object-container">
+  <h2 mat-dialog-title>
+    Create {{ data.title }}
+  </h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+    <div *ngFor="let key of objectKeys" class="form-field">
+      <label>{{ key }}</label>
+      <input matInput
+        [type]="getInputType(key)"
+        [formControlName]="key"
+        [placeholder]="getPlaceholder(key)"
+      />
+      <div *ngIf="form.get(key)?.invalid && form.get(key)?.dirty" class="error">
+        {{ key }} is required.
+      </div>
+    </div>
+
+    <div mat-dialog-actions>
+      <button mat-button (click)="close()">
+        Cancel
+      </button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+        Create
+      </button>
+    </div>
+
+  </form>
+
+</div>
