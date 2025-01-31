@@ -37,7 +37,7 @@ export class VenueService {
   }
 
   delete(venueId: number) {
-    let model = this._model.value;
+    let model = [...this._model.value];
     let index = model.findIndex((hb) => hb.id === venueId);
     if (index !== -1) {
       model.splice(index, 1);

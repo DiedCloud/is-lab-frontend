@@ -51,7 +51,10 @@ import {MatButton} from '@angular/material/button';
   styleUrl: './objects-table.component.css'
 })
 export class ObjectsTableComponent<T> implements AfterViewInit, OnChanges {
-  @Input() columns: Array<{ key: string, title: string, filterType?: FilterType }> = []; // Колонки с ключами и названиями
+  columns: Array<{ key: string, title: string, filterType?: FilterType }> = []; // Колонки с ключами и названиями
+  @Input() set setColumns(columns: Array<{ key: string, title: string, filterType?: FilterType }>) {
+    this.columns = [...columns, { key: "actions", title: "Actions" }]
+  }
 
   // Источник данных
   @Input() set dataSource(data: T[]) {
@@ -140,7 +143,7 @@ export class ObjectsTableComponent<T> implements AfterViewInit, OnChanges {
   toggleEdit(row: T): void {
     this.isEditing = !this.isEditing;
     if (this.isEditing) {
-      this.editableData = { ...row }; // Сбрасываем изменения при выходе из редактирования
+      this.editableData = { ...row }; // Заполняем при входе в редактирование
     } else {
       this.editableData = null;
     }

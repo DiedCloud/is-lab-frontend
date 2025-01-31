@@ -3,7 +3,7 @@
 </button>
 
 <app-objects-table
-  [columns]="columns"
+  [setColumns]="columns"
   [dataSource]="(this.ticketService.model | async) || []"
   [canEdit]="canEdit"
   (rowSave)="saveObject($event)"

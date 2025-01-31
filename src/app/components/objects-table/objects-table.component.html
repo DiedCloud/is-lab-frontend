@@ -1,73 +1,42 @@
 <div class="table-container">
-  <!-- Фильтры -->
-  <div class="filters">
-    <ng-container *ngFor="let column of columns">
-      <div class="filter">
-        <label>{{ column.title }}</label>
-        <input *ngIf="column.filterType == FilterType.STRING" matInput [placeholder]="'Filter by ' + column.title"
-               [formControl]="filters[column.key]" />
-        <input *ngIf="column.filterType == FilterType.NUMBER" matInput placeholder="e.g. 10-20"
-               [formControl]="filters[column.key]" />
-      </div>
-    </ng-container>
-  </div>
-
-  <!-- Таблица -->
   <table mat-table [dataSource]="data" class="mat-elevation-z8" matSort>
     <!-- Динамические колонки -->
     <ng-container *ngFor="let column of columns" [matColumnDef]="column.key">
-      <th mat-header-cell *matHeaderCellDef>{{ column.title }}</th>
+      <th mat-header-cell *matHeaderCellDef>
+        <div class="filter">
+          <label>{{ column.title }}</label>
+          <input *ngIf="column.filterType == FilterType.STRING" matInput [placeholder]="'Filter by ' + column.title"
+                 [formControl]="filters[column.key]" />
+          <input *ngIf="column.filterType == FilterType.NUMBER" matInput placeholder="e.g. 10-20"
+                 [formControl]="filters[column.key]" />
+        </div>
+      </th>
       <!-- TODO тут был mat-row... -->
-        <td mat-cell *matCellDef="let row">
-          <!-- Если строка в режиме редактирования -->
-          <ng-container *ngIf="isEditing; else viewMode">
-            <input matInput [(ngModel)]="row[column.key]" />
-          </ng-container>
-          <!-- Если строка не в режиме редактирования -->
-          <ng-template #viewMode>
-            {{ row[column.key] }}
-          </ng-template>
-        </td>
-    </ng-container>
-
-    <!-- Управление строкой -->
-    <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef>Actions</th>
       <td mat-cell *matCellDef="let row">
         <!-- Если строка в режиме редактирования -->
-        <ng-container *ngIf="isEditing; else defaultActions">
+        <div *ngIf="isEditing && column.key != 'actions'">
+          <input matInput [(ngModel)]="row[column.key]" />
+        </div>
+        <!-- Если строка не в режиме редактирования -->
+        <div *ngIf="!isEditing && column.key != 'actions'">
+          {{ row[column.key] }}
+        </div>
+
+        <!-- Если строка в режиме редактирования -->
+        <div *ngIf="isEditing && column.key == 'actions'">
           <button mat-button color="primary" (click)="saveRow()">Save</button>
           <button mat-button color="warn" (click)="toggleEdit(row)">Cancel</button>
-        </ng-container>
+        </div>
         <!-- Если строка не в режиме редактирования -->
-        <ng-template #defaultActions>
+        <div *ngIf="!isEditing && column.key == 'actions'">
           <button mat-button *ngIf="canEdit(row)" (click)="toggleEdit(row)">Edit</button>
           <button mat-button color="warn" *ngIf="canEdit(row)" (click)="deleteRow(row)">Delete</button>
-        </ng-template>
+        </div>
       </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
-
-
-
-    <!-- Динамические колонки
-    <ng-container *ngFor="let column of columns" [matColumnDef]="column.key">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ column.title }}</th>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;">
-        <td mat-cell *matCellDef="let element">
-          {{ element[column.key] }}
-        </td>
-        <td>
-          <button mat-button color="warn" (click)="deleteRow(row)">Delete</button>
-        </td>
-      </tr>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr> -->
   </table>
 
   <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
