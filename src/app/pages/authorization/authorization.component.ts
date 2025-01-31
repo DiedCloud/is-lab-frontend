@@ -1,14 +1,11 @@
 import {Component} from '@angular/core';
 import {NgIf} from "@angular/common";
 import {UserService} from "../../services/user.service";
-import {environment} from "../../../environments/environment";
-import {Router} from "@angular/router";
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatCardActions, MatCardContent, MatCardHeader, MatCardModule} from "@angular/material/card";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {MatButton} from "@angular/material/button";
-import {WebSocketService} from '../../services/web-socket.service';
 
 @Component({
   selector: 'app-authorization',
@@ -29,30 +26,8 @@ import {WebSocketService} from '../../services/web-socket.service';
 })
 export class AuthorizationComponent {
   constructor(
-    private router: Router,
     public userService: UserService,
-    public webSocketService: WebSocketService
   ) {
-  }
-
-  private sendAuth(url: string) {
-    this.userService.proceedAuthRequest(url)
-      .subscribe(
-        (res: any) => {
-          localStorage.setItem('authToken', res);
-
-          if (this.userService.user)
-            localStorage.setItem('login', this.userService.user.login);
-
-          this.webSocketService.connectWs();
-
-          this.router.navigate(['']).then(r => {
-            if (!r) {
-              console.error("redirect went wrong...");
-            }
-          });
-        }
-      );
   }
 
   formLogin = new FormGroup({
@@ -61,12 +36,7 @@ export class AuthorizationComponent {
   })
 
   login() {
-    this.userService.user = {
-      login: this.formLogin.value.login as string,
-      password: this.formLogin.value.password as string
-    }
-
-    this.sendAuth(environment.backendURL + '/auth/login');
+    this.userService.login(this.formLogin.value.login as string, this.formLogin.value.password as string)
   }
 
   isLogin = true;
@@ -100,11 +70,6 @@ export class AuthorizationComponent {
       return;
     }
 
-    this.userService.user = {
-      login: this.formRegistration.value.login as string,
-      password: this.formRegistration.value.password1 as string
-    }
-
-    this.sendAuth(environment.backendURL + '/auth/registration');
+    this.userService.registration(this.formRegistration.value.login as string, this.formRegistration.value.password1 as string);
   }
 }

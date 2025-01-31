@@ -5,7 +5,6 @@ import {CommonModule} from "@angular/common";
 import {MatToolbar} from "@angular/material/toolbar";
 import {MatButton} from "@angular/material/button";
 import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
-import {UserType} from './models/user';
 import {MatTableModule} from '@angular/material/table';
 import {MatSortModule} from '@angular/material/sort';
 import {MatPaginatorModule} from '@angular/material/paginator';
@@ -35,12 +34,9 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (!this.userService.user && typeof window !== 'undefined') {
-      let login = localStorage.getItem('login');
-      if (login) {
-        this.userService.user = {login: login, type: UserType.MEMBER}; // TODO whoAmI.
-        this.webSocketService.connectWs();
-      }
+    if (this.userService.user || localStorage.getItem('authToken')) {
+      this.userService.validateUser()
+      this.webSocketService.connectWs();
     }
   }
 

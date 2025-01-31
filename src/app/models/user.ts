@@ -2,7 +2,7 @@ export interface IUser{
   id?: number
   login: string
   password?: string
-  type?: UserType
+  userType?: UserType
 }
 
 export enum UserType {MEMBER, ADMIN}
