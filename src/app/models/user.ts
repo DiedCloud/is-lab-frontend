@@ -5,7 +5,7 @@ export interface IUser{
   userType?: UserType
 }
 
-export enum UserType {MEMBER, ADMIN}
+export enum UserType {MEMBER = "MEMBER", ADMIN = "ADMIN"}
 
 export interface AdminRequest {
   id?: number

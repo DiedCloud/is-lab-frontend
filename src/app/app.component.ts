@@ -10,6 +10,7 @@ import {MatSortModule} from '@angular/material/sort';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatInputModule} from '@angular/material/input';
 import {WebSocketService} from './services/web-socket.service';
+import {UserType} from './models/user';
 
 @Component({
   selector: 'app-root',
@@ -34,24 +35,19 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.userService.user || localStorage.getItem('authToken')) {
-      this.userService.validateUser()
+    if (this.userService.user$ || localStorage.getItem('authToken')) {
+      this.userService.validateUser();
       this.webSocketService.connectWs();
     }
   }
 
   logout() {
-    this.userService.logout().subscribe(
-      {
-        next: () => {
-          localStorage.clear();
-          this.userService.user = null;
-
-          this.webSocketService.disconnectWs();
-
-          this.router.navigate(['authorization']).finally();
-          window.location.reload();
-        }
-    });
+    this.userService.logout()
   }
+
+  admin() {
+    this.router.navigate(['/admin']).finally()
+  }
+
+  protected readonly UserType = UserType;
 }

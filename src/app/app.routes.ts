@@ -6,6 +6,7 @@ import {EventsComponent} from './pages/events/events.component';
 import {VenuesComponent} from './pages/venues/venues.component';
 import {CreateObjectComponent} from './components/create-object/create-object.component';
 import {MainComponent} from './pages/main/main.component';
+import {AdminComponent} from './pages/admin/admin.component';
 // import {EventInfoComponent} from './pages/event-info/event-info.component';
 // import {TicketInfoComponent} from './pages/ticket-info/ticket-info.component';
 // import {VenueInfoComponent} from './pages/venue-info/venue-info.component';
@@ -50,6 +51,17 @@ export const routes: Routes = [
     children: [
       {
         path: '**',
+        redirectTo: ''
+      }
+    ]
+  },
+  {
+    path: 'admin',
+    component: AdminComponent,
+    canActivate: [AuthenticationGuard],
+    children: [
+      {
+        path: "**",
         redirectTo: ''
       }
     ]

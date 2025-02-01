@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FilterType, ObjectsTableComponent} from '../../components/objects-table/objects-table.component';
 import {MatButton} from '@angular/material/button';
 import {CreateObjectComponent, IType} from '../../components/create-object/create-object.component';
@@ -11,6 +11,7 @@ import {environment} from '../../../environments/environment';
 import {catchError, of, tap} from 'rxjs';
 import {AsyncPipe} from '@angular/common';
 import {UserService} from '../../services/user.service';
+import {IUser} from '../../models/user';
 
 @Component({
   selector: 'app-events',
@@ -22,7 +23,8 @@ import {UserService} from '../../services/user.service';
   templateUrl: './events.component.html',
   styleUrl: './events.component.css'
 })
-export class EventsComponent {
+export class EventsComponent implements OnInit {
+  currentUser: IUser | null = null
   columns = [
     { key: 'name', title: 'Name', filterType: FilterType.STRING },
     { key: 'minAge', title: 'Minimum Age', filterType: FilterType.NUMBER },
@@ -35,7 +37,7 @@ export class EventsComponent {
     { title: 'ticketsCount', type: IType.NUMBER, isRequired: true, placeholder: 'Enter number of available tickets'}
   ];
 
-  canEdit = (row: Event) => row.ownerId === this.userService.user?.id;
+  canEdit = (row: Event) => row.ownerId === this.currentUser?.id;
 
   constructor(
     private dialog: MatDialog,
@@ -45,6 +47,10 @@ export class EventsComponent {
     private userService: UserService
   ) {
     eventService.getAll()
+  }
+
+  ngOnInit() {
+    this.userService.user$.subscribe((res) => {this.currentUser = res})
   }
 
   openCreateDialog(): void {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FilterType, ObjectsTableComponent} from "../../components/objects-table/objects-table.component";
 import {MatButton} from "@angular/material/button";
 import {MatDialog} from '@angular/material/dialog';
@@ -11,6 +11,7 @@ import {AsyncPipe} from '@angular/common';
 import {Ticket, TicketType} from '../../models/ticket';
 import {catchError, of, tap} from 'rxjs';
 import {UserService} from '../../services/user.service';
+import {IUser} from '../../models/user';
 
 @Component({
   selector: 'app-tickets',
@@ -22,7 +23,9 @@ import {UserService} from '../../services/user.service';
   templateUrl: './tickets.component.html',
   styleUrl: './tickets.component.css'
 })
-export class TicketsComponent {
+export class TicketsComponent implements OnInit {
+  currentUser: IUser | null = null
+
   columns = [
     { key: 'id', title: 'ID', filterType: FilterType.NUMBER },
     { key: 'name', title: 'Name', filterType: FilterType.STRING },
@@ -52,7 +55,7 @@ export class TicketsComponent {
     { title: 'venueId', type: IType.NUMBER, isRequired: true,  placeholder: 'Choose venue'}// TODO linking venue
   ];
 
-  canEdit = (row: Ticket) => row.ownerId === this.userService.user?.id;
+  canEdit = (row: Ticket) => row.ownerId === this.currentUser?.id;
 
   constructor(
     private dialog: MatDialog,
@@ -62,6 +65,10 @@ export class TicketsComponent {
     private userService: UserService
   ) {
     ticketService.getAll()
+  }
+
+  ngOnInit() {
+    this.userService.user$.subscribe((res) => {this.currentUser = res})
   }
 
   openCreateDialog(): void {

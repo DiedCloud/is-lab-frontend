@@ -6,7 +6,7 @@
     <span class="spacer"></span>
 
     <!-- Средняя часть с навигацией -->
-    <div *ngIf="userService.user != undefined">
+    <div *ngIf="(userService.user$ | async) != null">
       <button mat-button routerLink="/">Главная</button>
       <button mat-button routerLink="/tickets">Билеты</button>
       <button mat-button routerLink="/events">Мероприятия</button>
@@ -15,12 +15,14 @@
     <!-- Правая часть с логином пользователя или кнопкой авторизации -->
     <span class="spacer"></span>
 
-    <button mat-button *ngIf="userService.user == undefined" routerLink="/authorization">Войти</button>
-    <div *ngIf="userService.user != undefined" [matMenuTriggerFor]="userMenu" class="user-menu">
-      <button mat-button>{{ userService.user.login }}</button>
+    <button mat-button *ngIf="(userService.user$ | async) == null" routerLink="/authorization">Войти</button>
+
+    <div *ngIf="(userService.user$ | async) != null" [matMenuTriggerFor]="userMenu" class="user-menu">
+      <button mat-button>{{ (userService.user$ | async)?.login }}</button>
     </div>
     <mat-menu #userMenu="matMenu">
       <button mat-menu-item (click)="logout()">Выйти</button>
+      <button mat-menu-item (click)="admin()" *ngIf="(userService.user$ | async)?.userType === UserType.ADMIN">Админ</button>
     </mat-menu>
   </mat-toolbar>
 

@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FilterType, ObjectsTableComponent} from '../../components/objects-table/objects-table.component';
 import {Router} from '@angular/router';
 import {CreateObjectComponent, IType} from '../../components/create-object/create-object.component';
@@ -11,6 +11,7 @@ import {Venue, VenueType} from '../../models/venue';
 import {environment} from '../../../environments/environment';
 import {catchError, of, tap} from 'rxjs';
 import {UserService} from '../../services/user.service';
+import {IUser} from '../../models/user';
 
 @Component({
   selector: 'app-venues',
@@ -22,7 +23,9 @@ import {UserService} from '../../services/user.service';
   templateUrl: './venues.component.html',
   styleUrl: './venues.component.css'
 })
-export class VenuesComponent {
+export class VenuesComponent implements OnInit {
+  currentUser: IUser | null = null
+
   columns = [
     { key: 'name', title: 'Name', filterType: FilterType.STRING },
     { key: 'capacity', title: 'Capacity', filterType: FilterType.NUMBER },
@@ -35,7 +38,7 @@ export class VenuesComponent {
     { title: 'type', type: IType.SELECT, placeholder: 'Enter type', options: Object.values(VenueType).filter(key => isNaN(Number(key))) }
   ];
 
-  canEdit = (row: Venue) => row.ownerId === this.userService.user?.id;
+  canEdit = (row: Venue) => row.ownerId === this.currentUser?.id;
 
   constructor(
     private dialog: MatDialog,
@@ -45,6 +48,10 @@ export class VenuesComponent {
     private userService: UserService
   ) {
     venueService.getAll()
+  }
+
+  ngOnInit() {
+    this.userService.user$.subscribe((res) => {this.currentUser = res})
   }
 
   openCreateDialog(): void {
