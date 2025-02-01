@@ -1,21 +1,19 @@
 import {Component, EventEmitter, Inject, Input, Output} from '@angular/core';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
-import {MatInput} from "@angular/material/input";
+import {MatFormField, MatInput} from "@angular/material/input";
 import {NgForOf, NgIf} from "@angular/common";
 import {MatButton} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialogActions, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
+import {MatOption, MatSelect} from '@angular/material/select';
 
 @Component({
   selector: 'app-create-object',
   imports: [
-    FormsModule,
-    MatInput,
-    MatButton,
-    ReactiveFormsModule,
-    NgForOf,
-    NgIf,
-    MatDialogTitle,
-    MatDialogActions
+    FormsModule, ReactiveFormsModule,
+    MatInput, MatButton,
+    MatDialogTitle, MatDialogActions,
+    NgForOf, NgIf,
+    MatFormField, MatSelect, MatOption
   ],
   templateUrl: './create-object.component.html',
   styleUrl: './create-object.component.css'
@@ -26,7 +24,7 @@ export class CreateObjectComponent {
   constructor(
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<CreateObjectComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { structure: any, title: string }
+    @Inject(MAT_DIALOG_DATA) public data: { structure: IStruct[], title: string }
   ) {
     this.form = this.fb.group({});
     this.initForm();
@@ -34,13 +32,8 @@ export class CreateObjectComponent {
 
   initForm(): void {
     const formGroup: { [key: string]: any } = {};
-    for (const key in this.data.structure) {
-      if (this.data.structure.hasOwnProperty(key)) {
-        formGroup[key] = [
-          '',
-          this.data.structure[key]?.required ? Validators.required : null
-        ];
-      }
+    for (const param of this.data.structure) {
+      formGroup[param.title] = ['', param?.isRequired ? Validators.required : null];
     }
     this.form = this.fb.group(formGroup);
   }
@@ -55,17 +48,23 @@ export class CreateObjectComponent {
     this.dialogRef.close(); // Закрыть окно без сохранения
   }
 
-  get objectKeys(): string[] {
-    return Object.keys(this.data.structure);
+  get parameters(): IStruct[] {
+    return this.data.structure;
   }
 
-  getInputType(key: string): string {
-    const type = this.data.structure[key]?.type || 'text';
-    return type === 'number' ? 'number' : 'text';
+  getInputType(type: IType): string {
+    return type.toString()
   }
 
-  getPlaceholder(key: string): string {
-    return this.data.structure[key]?.placeholder || `Enter ${key}`;
-  }
-
+  protected readonly IType = IType;
 }
+
+export interface IStruct {
+  title: string,
+  type: IType,
+  isRequired?: boolean,
+  placeholder: string,
+  options: string[]
+}
+
+export enum IType {TEXT, NUMBER, SELECT}

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import {FilterType, ObjectsTableComponent} from '../../components/objects-table/objects-table.component';
 import {MatButton} from '@angular/material/button';
-import {CreateObjectComponent} from '../../components/create-object/create-object.component';
+import {CreateObjectComponent, IType} from '../../components/create-object/create-object.component';
 import {Router} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
 import {EventService} from '../../services/event.service';
@@ -29,11 +29,11 @@ export class EventsComponent {
     { key: 'ticketsCount', title: 'Tickets Count', filterType: FilterType.NUMBER }
   ];
 
-  objectStructure = {
-    name: { type: 'text', required: true, placeholder: 'Enter name' },
-    minAge: { type: 'number', required: true, placeholder: 'Enter minimum visitor\'s age' },
-    ticketsCount: { type: 'number', required: true, placeholder: 'Enter number of available tickets' }
-  };
+  objectStructure = [
+    { title: 'name', type: IType.TEXT, isRequired: true, placeholder: 'Enter name' },
+    { title: 'minAge', type: IType.NUMBER, isRequired: true, placeholder: 'Enter minimum visitor\'s age' },
+    { title: 'ticketsCount', type: IType.NUMBER, isRequired: true, placeholder: 'Enter number of available tickets'}
+  ];
 
   canEdit = (row: Event) => row.ownerId === this.userService.user?.id;
 

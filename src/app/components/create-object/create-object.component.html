@@ -5,15 +5,29 @@
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
-    <div *ngFor="let key of objectKeys" class="form-field">
-      <label>{{ key }}</label>
-      <input matInput
-        [type]="getInputType(key)"
-        [formControlName]="key"
-        [placeholder]="getPlaceholder(key)"
-      />
-      <div *ngIf="form.get(key)?.invalid && form.get(key)?.dirty" class="error">
-        {{ key }} is required.
+    <div *ngFor="let param of parameters" class="form-field">
+      <label>{{ param.title }}</label>
+
+      <!-- Если есть options, отображаем mat-select -->
+      <mat-form-field *ngIf="param.type === IType.SELECT; else textInput">
+        <mat-select [formControlName]="param.title" [placeholder]="param.placeholder">
+          <mat-option *ngFor="let option of param.options" [value]="option">
+            {{ option }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Ввод текста или числа, если options нет -->
+      <ng-template #textInput>
+        <input matInput
+          [type]="getInputType(param.type)"
+          [formControlName]="param.title"
+          [placeholder]="param.placeholder  || 'Enter ' + param.title"
+        />
+      </ng-template>
+
+      <div *ngIf="form.get(param.title)?.invalid && form.get(param.title)?.dirty" class="error">
+        {{ param.title }} is required.
       </div>
     </div>
 

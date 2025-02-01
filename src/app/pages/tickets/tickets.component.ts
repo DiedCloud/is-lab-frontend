@@ -3,12 +3,12 @@ import {FilterType, ObjectsTableComponent} from "../../components/objects-table/
 import {MatButton} from "@angular/material/button";
 import {MatDialog} from '@angular/material/dialog';
 import {Router} from '@angular/router';
-import {CreateObjectComponent} from '../../components/create-object/create-object.component';
+import {CreateObjectComponent, IType} from '../../components/create-object/create-object.component';
 import {environment} from '../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {TicketService} from '../../services/ticket.service';
 import {AsyncPipe} from '@angular/common';
-import {Ticket} from '../../models/ticket';
+import {Ticket, TicketType} from '../../models/ticket';
 import {catchError, of, tap} from 'rxjs';
 import {UserService} from '../../services/user.service';
 
@@ -38,19 +38,19 @@ export class TicketsComponent {
     { key: 'venueId', title: 'venue ID', filterType: FilterType.NUMBER }, // TODO link to venue
   ];
 
-  objectStructure = {
-    name: { type: 'text', required: true, placeholder: 'Enter name' },
+  objectStructure = [
+    { title: 'name', type: IType.TEXT, isRequired: true, placeholder: 'Enter name' },
     // TODO coordinates
-    creationDate: { type: 'number', required: true, placeholder: 'Enter capacity' },
+    { title: 'creationDate', type: IType.NUMBER, isRequired: true, placeholder: 'Enter creation date' },
     // TODO Person
-    eventId: { type: 'number', required: true, placeholder: 'Choose event' }, // TODO linking event
-    price: { type: 'number', required: true, placeholder: 'Enter price' },
-    type: { type: 'text', required: true, placeholder: 'Choose type' },
-    discount: { type: 'number', required: true, placeholder: 'Enter discount' },
-    number: { type: 'number', required: true, placeholder: 'Enter number' },
-    comment: { type: 'text', placeholder: 'Enter comment' },
-    venueId: { type: 'number', required: true, placeholder: 'Choose venue' }// TODO linking venue
-  };
+    { title: 'eventId', type: IType.NUMBER, isRequired: true,  placeholder: 'Choose event'}, // TODO linking event
+    { title: 'price', type: IType.NUMBER, isRequired: true,  placeholder: 'Enter price'},
+    { title: 'type', type: IType.SELECT, isRequired: true,  placeholder: 'Enter type', options: Object.values(TicketType).filter(key => isNaN(Number(key))) },
+    { title: 'discount', type: IType.NUMBER, isRequired: true,  placeholder: 'Enter discount'},
+    { title: 'number', type: IType.NUMBER, isRequired: true,  placeholder: 'Enter number'},
+    { title: 'comment', type: IType.TEXT,  placeholder: 'Enter comment'},
+    { title: 'venueId', type: IType.NUMBER, isRequired: true,  placeholder: 'Choose venue'}// TODO linking venue
+  ];
 
   canEdit = (row: Ticket) => row.ownerId === this.userService.user?.id;
 

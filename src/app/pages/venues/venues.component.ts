@@ -1,13 +1,13 @@
 import {Component} from '@angular/core';
 import {FilterType, ObjectsTableComponent} from '../../components/objects-table/objects-table.component';
 import {Router} from '@angular/router';
-import {CreateObjectComponent} from '../../components/create-object/create-object.component';
+import {CreateObjectComponent, IType} from '../../components/create-object/create-object.component';
 import {MatButton} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
 import {VenueService} from '../../services/venue.service';
 import {HttpClient} from '@angular/common/http';
 import {AsyncPipe} from '@angular/common';
-import {Venue} from '../../models/venue';
+import {Venue, VenueType} from '../../models/venue';
 import {environment} from '../../../environments/environment';
 import {catchError, of, tap} from 'rxjs';
 import {UserService} from '../../services/user.service';
@@ -29,11 +29,11 @@ export class VenuesComponent {
     { key: 'type', title: 'Type', filterType: FilterType.STRING }
   ];
 
-  objectStructure = {
-    name: { type: 'text', required: true, placeholder: 'Enter name' },
-    capacity: { type: 'number', required: true, placeholder: 'Enter capacity' },
-    type: { type: 'text', placeholder: 'Enter type' }
-  };
+  objectStructure = [
+    { title: 'name', type: IType.TEXT, isRequired: true, placeholder: 'Enter name' },
+    { title: 'capacity', type: IType.NUMBER, isRequired: true, placeholder: 'Enter capacity' },
+    { title: 'type', type: IType.SELECT, placeholder: 'Enter type', options: Object.values(VenueType).filter(key => isNaN(Number(key))) }
+  ];
 
   canEdit = (row: Venue) => row.ownerId === this.userService.user?.id;
 
@@ -76,7 +76,7 @@ export class VenuesComponent {
       )
       .subscribe((id) => {
         if (id) {
-          // this.router.navigate([`/venue/${id}`]).finally();
+          // this.router.navigate([`/venue/${id}`]).finally(); TODO ?
         } else {
           console.warn('Navigation was skipped due to an error or invalid response.');
         }
@@ -87,7 +87,7 @@ export class VenuesComponent {
     console.log('Saved row:', row);
     // Обновляем данные
     this.http
-      .put(environment.backendURL + '/api/v1/venue/' + row.id, row) // TODO поля?
+      .put(environment.backendURL + '/api/v1/venue/' + row.id, row)
       .subscribe();
   }
 
