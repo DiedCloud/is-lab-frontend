@@ -124,7 +124,8 @@ export class ObjectsTableComponent<T extends object> implements AfterViewInit, O
   protected readonly FilterType = FilterType;
 
   // Удаление строк
-  @Input() canEdit: (row: T) => boolean = () => true; // Предикат на проверку прав
+  @Input() canEdit: (row: T) => boolean = () => false; // Предикат на проверку прав
+  @Input() isAdmin: boolean = false
 
   @Output() rowDelete = new EventEmitter<T>(); // Событие для удаления
   deleteRow(row: T) {

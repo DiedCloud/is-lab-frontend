@@ -20,13 +20,17 @@
           {{ row[column.key] }}
         </div>
 
-        <div *ngIf="this.editingRow === row && column.key == 'actions'">
+        <div *ngIf="!isAdmin && this.editingRow === row && column.key == 'actions'">
           <button mat-button color="primary" (click)="saveRow(row)">Save</button>
           <button mat-button color="warn" (click)="toggleEdit(row)">Cancel</button>
         </div>
-        <div *ngIf="!(this.editingRow === row) && column.key == 'actions'">
+        <div *ngIf="!isAdmin && !(this.editingRow === row) && column.key == 'actions'">
           <button mat-button *ngIf="canEdit(row)" (click)="toggleEdit(row)">Edit</button>
           <button mat-button color="warn" *ngIf="canEdit(row)" (click)="deleteRow(row)">Delete</button>
+        </div>
+        <div *ngIf="isAdmin && column.key == 'actions'">
+          <button mat-button (click)="saveRow(row)">Approve</button>
+          <button mat-button color="warn" (click)="deleteRow(row)">Decline</button>
         </div>
       </td>
     </ng-container>

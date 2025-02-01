@@ -1,0 +1,18 @@
+<div>
+  <button mat-raised-button (click)="openMainPanel()" class="margin">
+    Back to Main Panel
+  </button>
+  <button mat-raised-button (click)="updateAll()" class="margin">
+    Refresh
+  </button>
+</div>
+
+
+<app-objects-table
+  [setColumns]="columns"
+  [dataSource]="(this.adminRqService.model | async) || []"
+  [isAdmin]="true"
+  (rowSave)="approve($event)"
+  (rowDelete)="decline($event)"
+></app-objects-table>
+

@@ -9,7 +9,8 @@ export enum UserType {MEMBER = "MEMBER", ADMIN = "ADMIN"}
 
 export interface AdminRequest {
   id?: number
-  user: IUser
+  userId: number
+  login: string
   requestDate: string
   status: string
   comment: string
