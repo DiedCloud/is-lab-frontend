@@ -1,8 +1,8 @@
 <div class="table-container">
   <table mat-table [dataSource]="data" class="mat-elevation-z8" matSort>
-    <!-- Динамические колонки -->
+
     <ng-container *ngFor="let column of columns" [matColumnDef]="column.key">
-      <th mat-header-cell *matHeaderCellDef>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
         <div class="filter">
           <label>{{ column.title }}</label>
           <input *ngIf="column.filterType == FilterType.STRING" matInput [placeholder]="'Filter by ' + column.title"
@@ -11,24 +11,20 @@
                  [formControl]="filters[column.key]" />
         </div>
       </th>
-      <!-- TODO тут был mat-row... -->
+
       <td mat-cell *matCellDef="let row">
-        <!-- Если строка в режиме редактирования -->
-        <div *ngIf="isEditing && column.key != 'actions'">
+        <div *ngIf="this.editingRow === row && column.key != 'actions'">
           <input matInput [(ngModel)]="row[column.key]" />
         </div>
-        <!-- Если строка не в режиме редактирования -->
-        <div *ngIf="!isEditing && column.key != 'actions'">
+        <div *ngIf="!(this.editingRow === row) && column.key != 'actions'">
           {{ row[column.key] }}
         </div>
 
-        <!-- Если строка в режиме редактирования -->
-        <div *ngIf="isEditing && column.key == 'actions'">
-          <button mat-button color="primary" (click)="saveRow()">Save</button>
+        <div *ngIf="this.editingRow === row && column.key == 'actions'">
+          <button mat-button color="primary" (click)="saveRow(row)">Save</button>
           <button mat-button color="warn" (click)="toggleEdit(row)">Cancel</button>
         </div>
-        <!-- Если строка не в режиме редактирования -->
-        <div *ngIf="!isEditing && column.key == 'actions'">
+        <div *ngIf="!(this.editingRow === row) && column.key == 'actions'">
           <button mat-button *ngIf="canEdit(row)" (click)="toggleEdit(row)">Edit</button>
           <button mat-button color="warn" *ngIf="canEdit(row)" (click)="deleteRow(row)">Delete</button>
         </div>

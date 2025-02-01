@@ -29,38 +29,31 @@ import {MatButton} from '@angular/material/button';
   imports: [
     MatTable,
     MatColumnDef,
-    MatHeaderCell,
-    MatHeaderCellDef,
-    MatCellDef,
-    MatCell,
-    MatHeaderRow,
-    MatRow,
-    MatRowDef,
-    MatHeaderRowDef,
-    NgForOf,
-    MatPaginator,
-    MatSortHeader,
-    ReactiveFormsModule,
-    NgIf,
-    MatInput,
-    MatSort,
-    MatButton,
-    FormsModule
+    MatHeaderCell, MatHeaderCellDef, MatCell, MatCellDef,
+    MatHeaderRow, MatHeaderRowDef, MatRow, MatRowDef,
+    NgForOf, NgIf,
+    MatPaginator, MatSortHeader, MatSort,
+    ReactiveFormsModule, MatInput, MatButton, FormsModule
   ],
   templateUrl: './objects-table.component.html',
   styleUrl: './objects-table.component.css'
 })
-export class ObjectsTableComponent<T> implements AfterViewInit, OnChanges {
+export class ObjectsTableComponent<T extends object> implements AfterViewInit, OnChanges {
   columns: Array<{ key: string, title: string, filterType?: FilterType }> = []; // Колонки с ключами и названиями
   @Input() set setColumns(columns: Array<{ key: string, title: string, filterType?: FilterType }>) {
-    this.columns = [...columns, { key: "actions", title: "Actions" }]
+    this.columns = [...columns, {key: "actions", title: "Actions"}]
   }
 
   // Источник данных
   @Input() set dataSource(data: T[]) {
-    this.data = new MatTableDataSource<T>(data);
+    if (!this.data) {
+      this.data = new MatTableDataSource<T>(data);
+    } else {
+      this.data.data = data;
+    }
     this.initializeFilters();
   }
+
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -74,6 +67,7 @@ export class ObjectsTableComponent<T> implements AfterViewInit, OnChanges {
   ngAfterViewInit(): void {
     this.data.sort = this.sort;
     this.data.paginator = this.paginator;
+    this.data._updateChangeSubscription(); // обновить сортировку и пагинацию
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -122,6 +116,9 @@ export class ObjectsTableComponent<T> implements AfterViewInit, OnChanges {
       });
     };
     this.data.filter = JSON.stringify(filterValues);
+    if (this.data.paginator) {
+      this.data.paginator.firstPage(); // <- Сбросить пагинацию при изменении фильтра
+    }
   }
 
   protected readonly FilterType = FilterType;
@@ -137,21 +134,24 @@ export class ObjectsTableComponent<T> implements AfterViewInit, OnChanges {
   // Изменение строк TODO check
   @Output() rowSave = new EventEmitter<any>(); // Событие для сохранения
 
-  isEditing = false; // Режим редактирования
+  editingRow: T | null = null; // Будет ссылкой. Для проверки режима редактирования
   editableData: T | null = null; // Копия данных для редактирования
 
   toggleEdit(row: T): void {
-    this.isEditing = !this.isEditing;
-    if (this.isEditing) {
-      this.editableData = { ...row }; // Заполняем при входе в редактирование
-    } else {
+    if (this.editingRow === row && this.editableData) {
+      Object.assign(row, this.editableData); // Восстановление данных при нажатии "Cancel"
       this.editableData = null;
+      this.editingRow = null;
+    } else {
+      this.editableData = { ...row }; // Запоминаем при входе в редактирование
+      this.editingRow = row;
     }
   }
-  saveRow(): void {
-    this.rowSave.emit(this.editableData); // Передаем измененные данные наверх
-    this.isEditing = false;
+
+  saveRow(row: T): void {
+    this.rowSave.emit({...row}); // Передаем измененные данные наверх
+    this.editingRow = null;
   }
 }
 
-export enum FilterType {STRING,NUMBER}
+export enum FilterType {STRING, NUMBER}
