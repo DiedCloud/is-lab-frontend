@@ -18,14 +18,19 @@ export class UserService {
   }
 
   private _user = new BehaviorSubject<IUser | null>(null);
+
+  public checkNotNullUser() {
+    return this._user.getValue() != null;
+  }
+
   public user$ = this._user.asObservable();
 
-  private sendAuth(url: string, login: string, password: string) {
-    this.http.post(url, {
-      username: login,
-      password: password
-    }, { responseType: 'text' }
-    ).subscribe({
+  private sendAuth(url: string, login: string, password: string, requestAdmin: boolean = false) {
+    let obj = {username: login, password: password}
+    if (requestAdmin) {
+      Object.assign(obj, {...obj, requestAdmin: requestAdmin})
+    }
+    this.http.post(url, obj, { responseType: 'text' }).subscribe({
       error: (err) => {
         console.log(err);
         return '';
@@ -46,9 +51,13 @@ export class UserService {
     this.validateUser();
   }
 
-  registration(login: string, password: string) {
-    this.sendAuth(environment.backendURL + '/auth/registration', login, password);
+  registration(login: string, password: string, requestAdmin: boolean) {
+    this.sendAuth(environment.backendURL + '/auth/registration', login, password, requestAdmin);
     this.validateUser();
+  }
+
+  requestAdmin() {
+    this.http.post(environment.backendURL + '/api/v1/admin/request-admin-role', {}).subscribe();
   }
 
   validateUser() {

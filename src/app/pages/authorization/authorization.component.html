@@ -34,6 +34,9 @@
           <mat-label>Подтвердите пароль</mat-label>
           <input matInput placeholder="Подтвердите ваш пароль" formControlName="password2" type="password" required>
         </mat-form-field>
+        <mat-checkbox formControlName="requestAdmin">
+          Запросить права администратора
+        </mat-checkbox>
         <button mat-raised-button color="primary" type="submit" [disabled]="!registerForm.valid">Зарегистрироваться</button>
       </form>
     </mat-card-content>

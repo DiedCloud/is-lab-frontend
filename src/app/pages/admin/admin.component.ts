@@ -65,13 +65,13 @@ export class AdminComponent implements OnInit {
 
   approve(row: AdminRequest) {
     this.http
-      .put(environment.backendURL + '/api/v1/admin/approve/' + row.id, row)
+      .put(environment.backendURL + '/api/v1/admin/approve/' + row.id, {})
       .subscribe();
   }
 
   decline(row: AdminRequest): void {
     this.http
-      .delete(environment.backendURL + '/api/v1/admin/decline/' + row.id)
+      .put(environment.backendURL + '/api/v1/admin/decline/' + row.id, {})
       .subscribe();
   }
 

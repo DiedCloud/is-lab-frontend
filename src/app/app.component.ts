@@ -35,7 +35,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.userService.user$ || localStorage.getItem('authToken')) {
+    if (this.userService.checkNotNullUser() || localStorage.getItem('authToken')) {
       this.userService.validateUser();
       this.webSocketService.connectWs();
     }
@@ -47,6 +47,10 @@ export class AppComponent implements OnInit {
 
   admin() {
     this.router.navigate(['/admin']).finally()
+  }
+
+  requestAdmin() {
+    this.userService.requestAdmin()
   }
 
   protected readonly UserType = UserType;

@@ -6,19 +6,15 @@ import {MatCardActions, MatCardContent, MatCardHeader, MatCardModule} from "@ang
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {MatButton} from "@angular/material/button";
+import {MatCheckbox} from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-authorization',
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    MatCardModule,
-    MatCardHeader,
-    MatCardContent,
-    MatCardActions,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButton,
+    MatCardModule, MatCardHeader, MatCardContent, MatCardActions,
+    MatFormFieldModule, MatInputModule, MatButton, MatCheckbox,
     NgIf,
   ],
   templateUrl: './authorization.component.html',
@@ -36,7 +32,10 @@ export class AuthorizationComponent {
   })
 
   login() {
-    this.userService.login(this.formLogin.value.login as string, this.formLogin.value.password as string)
+    this.userService.login(
+      this.formLogin.value.login as string,
+      this.formLogin.value.password as string
+    )
   }
 
   isLogin = true;
@@ -54,7 +53,8 @@ export class AuthorizationComponent {
     password2: new FormControl<string>('', [
       Validators.required,
       Validators.minLength(6),
-    ])
+    ]),
+    requestAdmin: new FormControl<boolean>(false, [])
   })
 
   get RegPassword1() {
@@ -70,6 +70,10 @@ export class AuthorizationComponent {
       return;
     }
 
-    this.userService.registration(this.formRegistration.value.login as string, this.formRegistration.value.password1 as string);
+    this.userService.registration(
+      this.formRegistration.value.login as string,
+      this.formRegistration.value.password1 as string,
+      this.formRegistration.value.requestAdmin as boolean
+    );
   }
 }

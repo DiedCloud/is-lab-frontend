@@ -23,6 +23,7 @@
     <mat-menu #userMenu="matMenu">
       <button mat-menu-item (click)="logout()">Выйти</button>
       <button mat-menu-item (click)="admin()" *ngIf="(userService.user$ | async)?.userType === UserType.ADMIN">Админ</button>
+      <button mat-menu-item (click)="requestAdmin()" *ngIf="(userService.user$ | async)?.userType === UserType.MEMBER">Запросить права</button>
     </mat-menu>
   </mat-toolbar>
 
