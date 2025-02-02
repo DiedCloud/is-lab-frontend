@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {EventEmitter, Injectable} from '@angular/core';
 import { environment } from "../../environments/environment";
 import { Client, Message } from '@stomp/stompjs';
 import { EventService } from './event.service';
@@ -17,6 +17,8 @@ export class WebSocketService {
 
   private client: Client | null
 
+  userUpdateCallback: () => void = () => {}
+
   constructor(
     eventService: EventService,
     venueService: VenueService,
@@ -33,6 +35,7 @@ export class WebSocketService {
   private createClient() {
     this.client = new Client({
       brokerURL: environment.wsBackendURL,
+      // debug: function (str: any) { console.log(str); },
       connectHeaders: { 'Authorization': localStorage.getItem('authToken') || '', },
       reconnectDelay: 5000,
       heartbeatIncoming: 4000,
@@ -83,6 +86,7 @@ export class WebSocketService {
 
       this.client?.subscribe('/topic/updatedAdminRequest', (message: Message)=> {
         this.adminRqService.update(JSON.parse(message.body));
+        this.userUpdateCallback();
       });
       this.client?.subscribe('/topic/newAdminRequest', (message: Message)=> {
         this.adminRqService.update(JSON.parse(message.body));

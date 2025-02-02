@@ -15,6 +15,7 @@ export class UserService {
     private webSocketService: WebSocketService,
     private router: Router,
   ) {
+    webSocketService.userUpdateCallback = () => {this.validateUser()}
   }
 
   private _user = new BehaviorSubject<IUser | null>(null);
@@ -42,18 +43,17 @@ export class UserService {
         this.webSocketService.connectWs();
 
         this.router.navigate(['']).then(r => { if (!r) { console.error("redirect went wrong..."); } });
+        this.validateUser();
       }
     });
   }
 
   login(login: string, password: string) {
     this.sendAuth(environment.backendURL + '/auth/login', login, password);
-    this.validateUser();
   }
 
   registration(login: string, password: string, requestAdmin: boolean) {
     this.sendAuth(environment.backendURL + '/auth/registration', login, password, requestAdmin);
-    this.validateUser();
   }
 
   requestAdmin() {
