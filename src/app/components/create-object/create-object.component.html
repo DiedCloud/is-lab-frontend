@@ -6,25 +6,55 @@
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
     <div *ngFor="let param of parameters" class="form-field">
-      <label>{{ param.title }}</label>
 
-      <!-- Если есть options, отображаем mat-select -->
-      <mat-form-field *ngIf="param.type === IType.SELECT; else textInput">
-        <mat-select [formControlName]="param.title" [placeholder]="param.placeholder">
+      <mat-form-field *ngIf="param.type === IType.SELECT">
+        <mat-label>{{ param.title }}</mat-label>
+        <mat-select [formControlName]="param.title" [placeholder]="param.placeholder || 'Select ' + param.title">
           <mat-option *ngFor="let option of param.options" [value]="option">
             {{ option }}
           </mat-option>
         </mat-select>
       </mat-form-field>
 
-      <!-- Ввод текста или числа, если options нет -->
-      <ng-template #textInput>
-        <input matInput
-          [type]="getInputType(param.type)"
+      <app-autocomplete-objects
+        *ngIf="param.type === IType.SELECT_OBJECT"
+        [title]="param.title"
+        [isRequired]="param.isRequired || false"
+        [placeholder]="param.placeholder || 'Pick ' + param.title"
+        [options]="(param.objectOptions | async) || []"
+        [fillControl]="fillControl.bind(this)"
+      />
+
+      <mat-form-field *ngIf="param.type === IType.DATE">
+        <mat-label>{{ param.placeholder || 'Choose ' + param.title }}</mat-label>
+        <input
+          matInput [matDatepicker]="picker"
           [formControlName]="param.title"
-          [placeholder]="param.placeholder  || 'Enter ' + param.title"
+          [required]="param.isRequired || false"
+        >
+        <mat-hint>дд/мм/гггг</mat-hint>
+        <mat-datepicker-toggle [for]="picker">
+          <mat-icon matDatepickerToggleIcon>keyboard_arrow_right</mat-icon>
+        </mat-datepicker-toggle>
+        <mat-datepicker touchUi #picker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="param.type === IType.TEXT || param.type === IType.NUMBER">
+        <mat-label>{{ param.title }}</mat-label>
+        <input matInput
+               [type]="getInputType(param.type)"
+               [formControlName]="param.title"
+               [placeholder]="param.placeholder  || 'Enter ' + param.title"
         />
-      </ng-template>
+      </mat-form-field>
+
+      <button
+        *ngIf="param.type === IType.OBJECT"
+        mat-raised-button color="primary"
+        (click)="openCreateDialog(param.structure, param.title)"
+      >
+        Fill {{param.title}}
+      </button>
 
       <div *ngIf="form.get(param.title)?.invalid && form.get(param.title)?.dirty" class="error">
         {{ param.title }} is required.

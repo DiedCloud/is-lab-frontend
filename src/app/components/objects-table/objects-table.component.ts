@@ -132,7 +132,6 @@ export class ObjectsTableComponent<T extends object> implements AfterViewInit, O
     this.rowDelete.emit(row);
   }
 
-  // Изменение строк TODO check
   @Output() rowSave = new EventEmitter<any>(); // Событие для сохранения
 
   editingRow: T | null = null; // Будет ссылкой. Для проверки режима редактирования

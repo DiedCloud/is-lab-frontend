@@ -1,0 +1,14 @@
+<mat-form-field class="example-full-width">
+  <mat-label>{{ title }}</mat-label>
+  <input type="text"
+         matInput
+         [placeholder]="placeholder || 'Pick ' + title"
+         [formControl]="myControl"
+         [matAutocomplete]="auto">
+  <mat-autocomplete [requireSelection]="isRequired" #auto="matAutocomplete">
+    @for (option of filteredOptions | async; track option) {
+      <mat-option [value]="option">{{option}}</mat-option>
+    }
+  </mat-autocomplete>
+</mat-form-field>
+

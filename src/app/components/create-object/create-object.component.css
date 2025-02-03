@@ -1,10 +1,11 @@
 .create-object-container {
   max-width: 500px;
   margin: 0 auto;
+  max-height: 80vh; /* Ограничиваем высоту 80% от высоты экрана */
 }
 
 .form-field {
-  margin-bottom: 15px;
+  margin-bottom: 5px;
 }
 
 .error {

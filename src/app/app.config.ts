@@ -14,9 +14,11 @@ import {
 } from "@angular/common/http";
 import {catchError, Observable, throwError} from "rxjs";
 import {DatePipe} from "@angular/common";
+import {MAT_DATE_LOCALE} from '@angular/material/core';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    {provide: MAT_DATE_LOCALE, useValue: 'ru-RU'},
     provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideAnimationsAsync(),
     provideRouter(routes),
     provideClientHydration(),
