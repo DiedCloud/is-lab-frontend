@@ -1,9 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {WebSocketService} from '../../services/web-socket.service';
+import {ClockComponent} from '../../components/clock/clock.component';
 
 @Component({
   selector: 'app-main',
-  imports: [],
+  imports: [
+    ClockComponent
+  ],
   templateUrl: './main.component.html',
   styleUrl: './main.component.css'
 })
