@@ -82,7 +82,7 @@ export class VenuesComponent implements OnInit {
       .subscribe((id) => {
         if (id) {
           console.log(`Object created with ID: ${id}`);
-          // this.router.navigate([`/venue/${id}`]).finally(); TODO ?
+          // this.router.navigate([`/venue/${id}`]).finally();
         } else {
           console.warn('Navigation was skipped due to an error or invalid response.');
         }

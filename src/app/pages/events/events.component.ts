@@ -12,14 +12,22 @@ import {catchError, of} from 'rxjs';
 import {AsyncPipe} from '@angular/common';
 import {UserService} from '../../services/user.service';
 import {IUser, UserType} from '../../models/user';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {MatFormField, MatLabel} from "@angular/material/form-field";
+import {MatInput} from "@angular/material/input";
 
 @Component({
   selector: 'app-events',
-  imports: [
-    ObjectsTableComponent,
-    MatButton,
-    AsyncPipe
-  ],
+    imports: [
+        ObjectsTableComponent,
+        MatButton,
+        AsyncPipe,
+        FormsModule,
+        MatFormField,
+        MatInput,
+        MatLabel,
+        ReactiveFormsModule
+    ],
   templateUrl: './events.component.html',
   styleUrl: './events.component.css'
 })
@@ -92,7 +100,7 @@ export class EventsComponent implements OnInit {
     console.log('Saved row:', row);
     // Обновляем данные
     this.http
-      .put(environment.backendURL + '/api/v1/event/' + row.id, row) // TODO поля?
+      .put(environment.backendURL + '/api/v1/event/' + row.id, row)
       .subscribe();
   }
 
@@ -102,5 +110,16 @@ export class EventsComponent implements OnInit {
     this.http
       .delete(environment.backendURL + '/api/v1/event/' + row.id)
       .subscribe();
+  }
+
+  cancelingForm = new FormGroup({
+    "id": new FormControl("", [Validators.required, Validators.min(1)]),
+  });
+  cancelEvent() {
+    const id = this.cancelingForm.get('id')?.getRawValue()
+    console.log(id)
+    this.http
+      .delete(environment.backendURL + '/api/v1/event/' + id + '/cancel')
+      .subscribe(res => {if (res) {alert("succes")}});
   }
 }

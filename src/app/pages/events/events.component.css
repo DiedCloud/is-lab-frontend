@@ -1,0 +1,17 @@
+.special-call-form {
+  margin: auto;
+  width: 30%;
+  max-width: 350px;
+  min-width: 150px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.special-call-form-container {
+  width: 80%;
+  margin: auto;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}

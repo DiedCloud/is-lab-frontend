@@ -1,3 +1,11 @@
+# IS lab works frontend
+
+Angular приложение, выполняющее роль frontend-а для лабораторных работ по курсу "Информационные системы"
+
+Репозиторий будет включать в себя все 3 работы, ведь и 2-я, и 3-я работы модифицируют предыдущую.
+
+---
+
 # IslabFrontend
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.6.

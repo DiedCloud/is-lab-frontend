@@ -1,0 +1,24 @@
+.special-call-form {
+  margin: auto;
+  width: 30%;
+  max-width: 400px;
+  min-width: 150px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.special-call-button {
+  margin: 15px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.special-call-form-container {
+  width: 80%;
+  margin: auto;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}

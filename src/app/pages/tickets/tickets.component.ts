@@ -5,24 +5,26 @@ import {MatDialog} from '@angular/material/dialog';
 import {Router} from '@angular/router';
 import {CreateObjectComponent, IStruct, IType} from '../../components/create-object/create-object.component';
 import {environment} from '../../../environments/environment';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {TicketService} from '../../services/ticket.service';
-import {AsyncPipe} from '@angular/common';
+import {AsyncPipe, NgIf} from '@angular/common';
 import {Color, Ticket, TicketType} from '../../models/ticket';
 import {catchError, of} from 'rxjs';
 import {UserService} from '../../services/user.service';
 import {IUser, UserType} from '../../models/user';
 import {EventService} from '../../services/event.service';
 import {VenueService} from '../../services/venue.service';
-import {Event} from '../../models/event';
-import {Venue} from '../../models/venue';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {MatFormField, MatLabel} from '@angular/material/form-field';
+import {MatInput} from '@angular/material/input';
 
 @Component({
   selector: 'app-tickets',
   imports: [
     ObjectsTableComponent,
-    MatButton,
-    AsyncPipe
+    AsyncPipe,
+    FormsModule, ReactiveFormsModule,
+    MatButton, MatLabel, MatInput, MatFormField
   ],
   templateUrl: './tickets.component.html',
   styleUrl: './tickets.component.css'
@@ -107,14 +109,6 @@ export class TicketsComponent implements OnInit {
     ];
   }
 
-  extractVenue(venue: Venue): string {
-    return venue.id + ': ' + venue.name
-  }
-
-  extractEvent(event: Event): string {
-    return event.id + ': ' + event.name
-  }
-
   ngOnInit() {
     this.userService.user$.subscribe((res) => {this.currentUser = res})
   }
@@ -146,7 +140,7 @@ export class TicketsComponent implements OnInit {
       .subscribe((id) => {
         if (id) {
           console.log(`Object created with ID: ${id}`);
-          // this.router.navigate([`/ticket/${id}`]).finally();
+          // this.router.navigate([`/ticket/${id}`]).finally(); TODO ?
         } else {
           console.warn('Navigation was skipped due to an error or invalid response.');
         }
@@ -157,7 +151,7 @@ export class TicketsComponent implements OnInit {
     console.log('Saved row:', row);
     // Обновляем данные
     this.http
-      .put(environment.backendURL + '/api/v1/ticket/' + row.id, row) // TODO поля?
+      .put(environment.backendURL + '/api/v1/ticket/' + row.id, row)
       .subscribe();
   }
 
@@ -166,6 +160,75 @@ export class TicketsComponent implements OnInit {
 
     this.http
       .delete(environment.backendURL + '/api/v1/ticket/' + row.id)
+      .subscribe();
+  }
+
+  countNumberSum(){
+    this.http
+      .get(environment.backendURL + '/api/v1/ticket/total-number')
+      .subscribe(res => {alert("Total number is: " + res)});
+  }
+
+  substringForm = new FormGroup({
+    "str": new FormControl("", Validators.required),
+  });
+  findAllBySubstring(){
+    const str = this.substringForm.get('str')?.getRawValue()
+    console.log(str)
+
+    const params = new HttpParams().set('substring', str);
+    this.http
+      .get<Ticket[]>(environment.backendURL + '/api/v1/ticket/find-by-substring', {params})
+      .subscribe({
+        next: (res) => {
+          const p = document.getElementById('substring-result');
+          if (!p) {
+            console.error('Элемент с id "substring-result" не найден.');
+            return;
+          }
+
+          p.innerText =  res.map(ticket => JSON.stringify(ticket)).join('\n');
+        },
+        error: (err) => {
+          console.error('Ошибка при получении данных:', err);
+        }
+      });
+  }
+
+  prefixForm = new FormGroup({
+    "prefix": new FormControl("", Validators.required),
+  });
+  findAllByPrefix() {
+    const prefix = this.prefixForm.get('prefix')?.getRawValue()
+    console.log(prefix)
+
+    const params = new HttpParams().set('prefix', prefix);
+    this.http
+      .get<Ticket[]>(environment.backendURL + '/api/v1/ticket/find-by-prefix', {params})
+      .subscribe({
+        next: (res) => {
+          const p = document.getElementById('prefix-result');
+          if (!p) {
+            console.error('Элемент с id "prefix-result" не найден.');
+            return;
+          }
+
+          p.innerText =  res.map(ticket => JSON.stringify(ticket)).join('\n');
+        },
+        error: (err) => {
+          console.error('Ошибка при получении данных:', err);
+        }
+      });
+  }
+
+  vipForm = new FormGroup({
+    "id": new FormControl("", [Validators.required, Validators.min(1)]),
+  });
+  cloneAsVIP() {
+    const id = this.vipForm.get('id')?.getRawValue()
+    console.log(id)
+    this.http
+      .post(environment.backendURL + '/api/v1/ticket/duplicate-vip/' + id, {})
       .subscribe();
   }
 }
