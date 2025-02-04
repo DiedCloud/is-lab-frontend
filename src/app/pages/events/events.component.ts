@@ -15,19 +15,21 @@ import {IUser, UserType} from '../../models/user';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
+import {UploadExcelComponent} from '../../components/upload-excel/upload-excel.component';
 
 @Component({
   selector: 'app-events',
-    imports: [
-        ObjectsTableComponent,
-        MatButton,
-        AsyncPipe,
-        FormsModule,
-        MatFormField,
-        MatInput,
-        MatLabel,
-        ReactiveFormsModule
-    ],
+  imports: [
+    ObjectsTableComponent,
+    MatButton,
+    AsyncPipe,
+    FormsModule,
+    MatFormField,
+    MatInput,
+    MatLabel,
+    ReactiveFormsModule,
+    UploadExcelComponent
+  ],
   templateUrl: './events.component.html',
   styleUrl: './events.component.css'
 })

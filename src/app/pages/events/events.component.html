@@ -1,6 +1,8 @@
-<button mat-raised-button color="primary" (click)="openCreateDialog()">
+<button mat-raised-button color="primary" (click)="openCreateDialog()" class="special-call-button" style="width: 400px">
   Create New Event
 </button>
+
+<app-upload-excel [urlPath]="'/api/v1/event/upload-file'"></app-upload-excel>
 
 <app-objects-table
   [setColumns]="columns"

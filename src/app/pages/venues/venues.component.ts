@@ -12,13 +12,15 @@ import {environment} from '../../../environments/environment';
 import {catchError, of} from 'rxjs';
 import {UserService} from '../../services/user.service';
 import {IUser, UserType} from '../../models/user';
+import {UploadExcelComponent} from '../../components/upload-excel/upload-excel.component';
 
 @Component({
   selector: 'app-venues',
   imports: [
     ObjectsTableComponent,
     MatButton,
-    AsyncPipe
+    AsyncPipe,
+    UploadExcelComponent
   ],
   templateUrl: './venues.component.html',
   styleUrl: './venues.component.css'

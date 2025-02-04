@@ -1,0 +1,14 @@
+<mat-card class="upload-card">
+  <input type="file" #fileInput (change)="onFileSelected($event)" hidden />
+  <button mat-button color="primary" (click)="fileInput.click()">
+    <mat-icon>attach_file</mat-icon> Выбрать файл
+  </button>
+
+  <p *ngIf="selectedFile">{{ selectedFile.name }}</p>
+
+  <button mat-raised-button color="accent" (click)="uploadFile()" [disabled]="!selectedFile">
+    <mat-icon>cloud_upload</mat-icon> Загрузить
+  </button>
+
+  <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+</mat-card>

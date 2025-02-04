@@ -1,0 +1,15 @@
+.upload-card {
+  width: 400px;
+  margin: 10px auto;
+  padding: 20px;
+  text-align: center;
+}
+
+mat-progress-bar {
+  margin-top: 10px;
+}
+
+p {
+  font-size: 14px;
+  margin-top: 10px;
+}

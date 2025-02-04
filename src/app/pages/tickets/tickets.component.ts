@@ -17,6 +17,7 @@ import {VenueService} from '../../services/venue.service';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatFormField, MatLabel} from '@angular/material/form-field';
 import {MatInput} from '@angular/material/input';
+import {UploadExcelComponent} from '../../components/upload-excel/upload-excel.component';
 
 @Component({
   selector: 'app-tickets',
@@ -24,7 +25,7 @@ import {MatInput} from '@angular/material/input';
     ObjectsTableComponent,
     AsyncPipe,
     FormsModule, ReactiveFormsModule,
-    MatButton, MatLabel, MatInput, MatFormField
+    MatButton, MatLabel, MatInput, MatFormField, UploadExcelComponent
   ],
   templateUrl: './tickets.component.html',
   styleUrl: './tickets.component.css'
