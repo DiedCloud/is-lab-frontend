@@ -5,6 +5,7 @@ import { EventService } from './event.service';
 import { VenueService } from './venue.service';
 import { TicketService } from './ticket.service';
 import { AdminRequestService } from './admin-request.service';
+import {ImportHistoryService} from './import-history.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,7 @@ export class WebSocketService {
   private venueService: VenueService
   private ticketService: TicketService
   private adminRqService: AdminRequestService
+  private importHistoryService: ImportHistoryService
 
   private client: Client | null
 
@@ -23,12 +25,14 @@ export class WebSocketService {
     eventService: EventService,
     venueService: VenueService,
     ticketService: TicketService,
-    adminRqService: AdminRequestService
+    adminRqService: AdminRequestService,
+    importHistoryService: ImportHistoryService
   ) {
     this.eventService = eventService;
     this.venueService = venueService;
     this.ticketService = ticketService;
     this.adminRqService = adminRqService;
+    this.importHistoryService = importHistoryService;
     this.client = null
   }
 
@@ -90,6 +94,10 @@ export class WebSocketService {
       });
       this.client?.subscribe('/topic/newAdminRequest', (message: Message)=> {
         this.adminRqService.update(JSON.parse(message.body));
+      });
+
+      this.client?.subscribe('/topic/newImport', (message: Message)=> {
+        this.importHistoryService.update(JSON.parse(message.body));
       });
     };
 

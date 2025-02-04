@@ -1,0 +1,7 @@
+<app-objects-table
+  [setColumns]="columns"
+  [dataSource]="(this.importHistoryService.model | async) || []"
+  [canEdit]="canEdit"
+  (rowSave)="stub($event)"
+  (rowDelete)="stub($event)"
+></app-objects-table>

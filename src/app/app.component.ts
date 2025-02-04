@@ -53,5 +53,9 @@ export class AppComponent implements OnInit {
     this.userService.requestAdmin()
   }
 
+  importHistory() {
+    this.router.navigate(['/history']).finally()
+  }
+
   protected readonly UserType = UserType;
 }
