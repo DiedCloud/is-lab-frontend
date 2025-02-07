@@ -2,6 +2,9 @@
   [setColumns]="columns"
   [dataSource]="(this.importHistoryService.model | async) || []"
   [canEdit]="canEdit"
-  (rowSave)="stub($event)"
-  (rowDelete)="stub($event)"
+  [withEditAbility]="false"
+  button1Name="download"
+  button2Name="delete"
+  (button1callback)="downloadRow($event)"
+  (button2callback)="deleteRow($event)"
 ></app-objects-table>

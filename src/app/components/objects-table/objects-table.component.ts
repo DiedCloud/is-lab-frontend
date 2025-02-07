@@ -123,10 +123,11 @@ export class ObjectsTableComponent<T extends object> implements AfterViewInit, O
 
   protected readonly FilterType = FilterType;
 
-  // Удаление строк
-  @Input() canEdit: (row: T) => boolean = () => false; // Предикат на проверку прав
-  @Input() isAdmin: boolean = false
+  // Действия
+  @Input() canEdit: (row: T) => boolean = () => false; // Предикат на проверку прав для редактирования строки
+  @Input() withEditAbility: boolean = true // true - кнопки редактирования и удаления; false - любые другие
 
+  // редактирование / удаление
   @Output() rowDelete = new EventEmitter<T>(); // Событие для удаления
   deleteRow(row: T) {
     this.rowDelete.emit(row);
@@ -152,6 +153,12 @@ export class ObjectsTableComponent<T extends object> implements AfterViewInit, O
     this.rowSave.emit({...row}); // Передаем измененные данные наверх
     this.editingRow = null;
   }
+
+  // 2 свободных действия
+  @Input() button1Name: string = "Save"
+  @Input() button2Name: string = "Delete"
+  @Output() button1callback = new EventEmitter<T>();
+  @Output() button2callback = new EventEmitter<T>();
 }
 
 export enum FilterType {STRING, NUMBER}

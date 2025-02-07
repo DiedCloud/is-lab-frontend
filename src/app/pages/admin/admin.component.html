@@ -11,8 +11,10 @@
 <app-objects-table
   [setColumns]="columns"
   [dataSource]="(this.adminRqService.model | async) || []"
-  [isAdmin]="true"
-  (rowSave)="approve($event)"
-  (rowDelete)="decline($event)"
+  [withEditAbility]="false"
+  button1Name="approve"
+  button2Name="decline"
+  (button1callback)="approve($event)"
+  (button2callback)="decline($event)"
 ></app-objects-table>
 

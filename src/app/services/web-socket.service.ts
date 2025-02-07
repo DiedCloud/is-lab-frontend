@@ -99,6 +99,9 @@ export class WebSocketService {
       this.client?.subscribe('/topic/newImport', (message: Message)=> {
         this.importHistoryService.update(JSON.parse(message.body));
       });
+      this.client?.subscribe('/topic/removeImport', (message: Message)=> {
+        this.importHistoryService.delete(Number(message.body));
+      });
     };
 
     this.client.onStompError = function (frame: { headers: { [x: string]: string; }; body: string; }) {

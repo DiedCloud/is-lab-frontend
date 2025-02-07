@@ -47,4 +47,13 @@ export class ImportHistoryService {
 
     this._model.next(model);
   }
+
+  delete(venueId: number) {
+    let model = [...this._model.value];
+    let index = model.findIndex((hb) => hb.id === venueId);
+    if (index !== -1) {
+      model.splice(index, 1);
+      this._model.next(model);
+    }
+  }
 }
